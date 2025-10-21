@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
+/* ---------- Theme tokens ---------- */
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -19,67 +20,197 @@
   }
 }
 
+/* Base text colors (tailwind theme) */
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* ---------- App styling ---------- */
 :root {
   --bg: #0b0c10;
   --panel: #111317;
+  --puck-panel: #ffffff;
   --muted: #b8c1d1;
   --accent: #5865f2;
   --border: #242833;
 }
+
 * { box-sizing: border-box; }
-html, body { height: 100%; }
+html, body { 
+  height: 100%;
+  background: #0b0c10; 
+}
+
+/* App shell */
 body {
   margin: 0;
   background: var(--bg);
   color: #e8ecf3;
   font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
 }
+
 a { color: inherit; text-decoration: none; }
+
+/* Center content horizontally and keep everything near the top */
+.container {
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  padding: 12px 16px;
+}
+
 .wrapper {
   display: grid;
-  grid-template-rows: 56px 1fr;
-  height: 100vh;
+  grid-template-rows: auto 1fr;
+  min-height: 100vh;
 }
+
+/* Top bar sits inside centered .container */
 .topbar {
-  display: flex; align-items: center; gap: 12px;
-  padding: 0 16px; border-bottom: 1px solid var(--border); background: var(--panel);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  background: var(--panel);
 }
 .topbar h1 { font-size: 14px; font-weight: 600; letter-spacing: .02em; opacity: .9; }
 .spacer { flex: 1; }
+
 .btn {
-  padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; background: #191c24; color: var(--muted);
-  font-size: 12px; cursor: pointer;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #191c24;
+  color: var(--muted);
+  font-size: 12px;
+  cursor: pointer;
 }
 .btn:hover { border-color: #2e3341; color: #fff; }
+
+/* Main single-pane editor, also inside centered .container */
 .layout {
-  display: grid;
-  grid-template-columns: 1.1fr 1fr;
-  gap: 0; height: calc(100vh - 56px);
+  display: block;
+  height: calc(100vh - 56px);
 }
+
 .panel {
   border-right: 1px solid var(--border);
   background: var(--panel);
   overflow: hidden;
+  height: 100%;
 }
 .panel:last-child { border-right: 0; }
+
 .panel-inner {
-  height: 100%; overflow: auto;
+  height: 100%;
+  overflow: auto;
   padding: 8px 12px;
 }
+
+/* Make the Puck panel white */
+.panel--puck,
+.panel--puck .panel-inner {
+  background: #fff !important;
+}
+
+/* Force Puck canvas & its iframe wrapper to be white too */
+#puck-canvas-root,
+#puck-preview,
+#preview-frame,
+[data-puck-preview="true"],
+[class^="_PuckCanvas"],
+[class*="_PuckCanvas"],
+[class^="_PuckPreview"],
+[class*="_PuckPreview"] {
+  background: #fff !important;
+}
+
+/* Your right-side HTML preview (if used) */
 .preview {
   height: 100%;
   background: #0f1116;
 }
 .preview iframe {
-  width: 100%; height: 100%; border: 0; background: #fff;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #fff;
 }
+
 .hint {
   color: var(--muted);
   font-size: 12px;
   margin-left: 8px;
+}
+
+/* ---------- Modal (Send Test Email) — if you still use the classnames ---------- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.5);
+  z-index: 50;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 48px;
+}
+
+.modal {
+  width: 100%;
+  max-width: 480px;
+  background: #ffffff;
+  color: #111;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.25);
+  overflow: hidden;
+}
+
+.modal .modal-body { padding: 20px; }
+/* Make the Puck panel white instead of the site’s dark panel color */
+/* Make ONLY the editor area white by shadowing the CSS variables locally */
+.puck-scope {
+  /* locally override tokens so descendants using var(--bg)/var(--panel) go white */
+  --bg: #ffffff;
+  --panel: #ffffff;
+
+  /* also set a real background so transparent children don’t leak the page bg */
+  background: #ffffff;
+}
+
+/* Ensure all immediate containers actually paint white */
+.puck-scope .container,
+.puck-scope .layout,
+.puck-scope .panel,
+.puck-scope .panel-inner {
+  background: #ffffff !important;
+  /* remove dark borders inside the white scope if you want */
+  border-color: #e5e7eb; /* optional: a light border */
+}
+
+/* Belt & suspenders: Puck canvas & preview wrappers */
+.puck-scope #puck-canvas-root,
+.puck-scope [data-puck-preview="true"],
+.puck-scope #preview-frame,
+.puck-scope [class*="_PuckCanvas"],
+.puck-scope [class*="_PuckPreview"] {
+  background: #ffffff !important;
+}
+
+/* Target the Puck preview iframe specifically */
+.puck-scope iframe {
+  background: #ffffff !important;
+}
+
+/* Override dark mode for Puck editor area */
+.puck-scope {
+  color-scheme: light;
+}
+
+/* Ensure Puck's internal iframe document also gets white background */
+.puck-scope [data-rfd-droppable-id] {
+  background: #ffffff !important;
 }

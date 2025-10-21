@@ -1,5 +1,3 @@
-"use client";
-
 import type { Config } from "@measured/puck";
 import {
   Button,
@@ -11,14 +9,7 @@ import {
 import React from "react";
 
 
-export const config: Config = {
-  root: {
-    render: ({ children }: { children: React.ReactNode }) => (
-      <div style={{ background: '#ffffff', minHeight: '100vh' }}>
-        {children}
-      </div>
-    ),
-  },
+export const serverConfig: Config = {
   components: {
     Container: {
       label: "Container",
@@ -38,7 +29,7 @@ export const config: Config = {
         },
         content: { type: "slot", label: "Content" },
       },
-      render: ({ padding, maxWidth, background, align, content: Content }) => (
+      render: ({ padding, maxWidth, background, align, content }) => (
         <Container
           style={{
             padding,
@@ -49,7 +40,7 @@ export const config: Config = {
             textAlign: align as "left" | "center" | "right",
           }}
         >
-          <Content />
+          {content}
         </Container>
       ),
     },
@@ -63,9 +54,9 @@ export const config: Config = {
         background: { type: "text", label: "Background" },
         content: { type: "slot", label: "Content" },
       },
-      render: ({ paddingY, paddingX, background, content: Content }) => (
+      render: ({ paddingY, paddingX, background, content }) => (
         <Section style={{ backgroundColor: background, padding: `${paddingY}px ${paddingX}px` }}>
-          <Content />
+          {content}
         </Section>
       ),
     },
@@ -221,4 +212,4 @@ export const config: Config = {
   },
 };
 
-export type EditorConfig = typeof config;
+export type ServerConfig = typeof serverConfig;

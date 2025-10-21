@@ -4,10 +4,11 @@ import { Html, Head, Preview, Tailwind } from "@react-email/components";
 import { render as renderEmail } from "@react-email/render";
 import { config } from "@/lib/puckConfig";
 
-type Node = { type: string; props: Record<string, any>; children?: Node[] };
-type Payload = { data: { root: { props: Record<string, any> }; content: Node[] } };
+type Node = { type: string; props: Record<string, unknown>; children?: Node[] };
+type Payload = { data: { root: { props: Record<string, unknown> }; content: Node[] } };
 
 function renderNode(node: Node): React.ReactNode {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const def = (config as any).components?.[node.type];
   if (!def || typeof def.render !== "function") return null;
 
